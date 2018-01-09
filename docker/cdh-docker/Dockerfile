@@ -30,14 +30,14 @@ COPY conf/cloudera.list /etc/apt/sources.list.d/cloudera.list
 COPY conf/cloudera.pref /etc/apt/preferences.d/cloudera.pref
 
 #Add a Repository Key
-RUN wget http://archive.cloudera.com/cdh${CDH_VERSION}/ubuntu/trusty/amd64/cdh/archive.key -O archive.key && sudo apt-key add archive.key 
-RUN apt-get update
+RUN wget http://archive.cloudera.com/cdh${CDH_VERSION}/ubuntu/trusty/amd64/cdh/archive.key -O archive.key && sudo apt-key add archive.key
 
 # install hadoop-yarn
-RUN apt-get -y install hadoop-conf-pseudo
-
-# install spark
-RUN apt-get -y install spark-core spark-history-server spark-python
+RUN apt-get update && apt-get -y install hadoop-conf-pseudo && \
+    apt-get -y install spark-core spark-history-server spark-python && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y
 
 # set environment variables
 ENV HADOOP_CONF_DIR /etc/hadoop/conf

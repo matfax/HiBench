@@ -13,12 +13,11 @@ RUN \
   apt-get -y upgrade && \
   apt-get install -y build-essential && \
   apt-get install -y software-properties-common && \
-  apt-get install -y git wget curl man unzip vim-tiny bc 
-
-# install ssh server
-RUN \
-  apt-get update && \  
-  apt-get -y install openssh-server; mkdir -p /var/run/sshd; locale-gen en_US en_US.UTF-8
+  apt-get install -y git wget curl man unzip vim-tiny bc mc && \
+  apt-get -y install openssh-server; mkdir -p /var/run/sshd; locale-gen en_US en_US.UTF-8 && \
+  apt-get clean -y && \
+  apt-get autoremove -y && \
+  apt-get autoclean -y
 
 # passwordless ssh
 RUN rm -f /etc/ssh/ssh_host_dsa_key
@@ -37,7 +36,12 @@ RUN echo "    UserKnownHostsFile=/dev/null                 " >> /etc/ssh/ssh_con
 #==============================
 
 # install python
-RUN apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-dev && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y
 
 #==============================
 # Java Installation
@@ -47,7 +51,10 @@ RUN apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
 RUN \
   add-apt-repository -y ppa:openjdk-r/ppa && \
   apt-get update && \
-  apt-get install -y openjdk-${JDK_VERSION}-jdk
+  apt-get install -y openjdk-${JDK_VERSION}-jdk && \
+  apt-get clean -y && \
+  apt-get autoremove -y && \
+  apt-get autoclean -y
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-${JDK_VERSION}-openjdk-amd64
@@ -59,10 +66,10 @@ ENV PATH $PATH:$JAVA_HOME/bin
 #==============================
 
 # download maven
-RUN wget https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN tar xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN rm -f apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN mv apache-maven-* /usr/local/apache-maven
+RUN wget https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    tar xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    rm -f apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    mv apache-maven-* /usr/local/apache-maven
 
 # define environment variables for maven
 ENV M2_HOME /usr/local/apache-maven
@@ -79,16 +86,18 @@ ENV PATH $PATH:/usr/local/apache-maven/bin
 ENV HIBENCH_HOME /root/HiBench
 
 # download right version of HiBench
-RUN wget https://github.com/intel-hadoop/HiBench/archive/HiBench-6.0.zip
-RUN unzip HiBench-6.0.zip -d /root/
-RUN mv /root/HiBench-HiBench-6.0 ${HIBENCH_HOME}
-RUN rm -f HiBench-6.0.zip
+RUN wget https://github.com/intel-hadoop/HiBench/archive/HiBench-6.0.zip && \
+    unzip HiBench-6.0.zip -d /root/ && \
+    mv /root/HiBench-HiBench-6.0 ${HIBENCH_HOME} && \
+    rm -f HiBench-6.0.zip
 COPY conf/spark.conf ${HIBENCH_HOME}/conf/
 COPY conf/hadoop.conf ${HIBENCH_HOME}/conf/
 COPY conf/hibench.conf ${HIBENCH_HOME}/conf/
 
 # start building HiBench
-RUN apt-get update && apt-get install -y thrift-compiler
-RUN cd ${HIBENCH_HOME} && \
-mvn clean package -Dspark=1.6 -Dscala=2.10
-
+RUN apt-get update && apt-get install -y thrift-compiler && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y && \
+    cd ${HIBENCH_HOME} && \
+    mvn clean package -Dspark=1.6 -Dscala=2.10 
