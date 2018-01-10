@@ -20,6 +20,15 @@ FROM hibench-base
 
 USER root
 
+#=========================#
+#    Hadoop and Spark     #
+#=========================#
+ENV HADOOP_VERSION                   hadoop2
+ENV HADOOP_VERSION_DETAIL            2.6.4
+ENV SPARK_VERSION                    spark1.5
+ENV SPARK_VERSION_DETAIL             1.5.2
+ENV HADOOP_FOR_SPARK_VERSION         2.6
+
 #==============================
 # HADOOP Installation
 #==============================
@@ -39,9 +48,9 @@ RUN export YARN_HOME=$HADOOP_INSTALL
 RUN export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_INSTALL/lib/native
 RUN export HADOOP_OPTS="-Djava.library.path=$HADOOP_INSTALL/lib"
 
-RUN wget https://archive.apache.org/dist/hadoop/core/hadoop-${HADOOP_VERSION_DETAIL}/hadoop-${HADOOP_VERSION_DETAIL}.tar.gz
-RUN tar xzf hadoop-*.tar.gz -C /usr/local/
-RUN rm -f hadoop-*.tar.gz 
+RUN wget https://storage.asra.science/hadoop-${HADOOP_VERSION_DETAIL}/hadoop-${HADOOP_VERSION_DETAIL}.tar.gz && \
+    tar xzf hadoop-*.tar.gz -C /usr/local/ && \
+    rm -f hadoop-*.tar.gz
 
 
 #==============================
@@ -53,10 +62,10 @@ ENV SPARK_HOME /usr/local/spark-${SPARK_VERSION_DETAIL}
 ENV SPARK_MASTER_IP localhost
 
 # download spark
-RUN wget http://mirror.reverse.net/pub/apache/spark/spark-${SPARK_VERSION_DETAIL}/spark-${SPARK_VERSION_DETAIL}-bin-hadoop${HADOOP_FOR_SPARK_VERSION}.tgz 
-RUN tar xzf spark-*.tgz -C /usr/local
-RUN mv /usr/local/spark-* ${SPARK_HOME}
-RUN rm -f spark-*.tgz 
+RUN wget https://storage.asra.science/spark-${SPARK_VERSION_DETAIL}/spark-${SPARK_VERSION_DETAIL}-bin-hadoop${HADOOP_FOR_SPARK_VERSION}.tgz && \
+    tar xzf spark-*.tgz -C /usr/local && \
+    mv /usr/local/spark-* ${SPARK_HOME} && \
+    rm -f spark-*.tgz
 
 # Copy updated config files
 COPY conf/core-site.xml ${HADOOP_CONF_DIR}/

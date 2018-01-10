@@ -14,9 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+if ! [ -x "$(command -v wslpath)" ]; then
+    echo "#=================================================#"
+    echo "  Installing wslpath since command doesn't exist   "
+    echo "#=================================================#"
+    chmod 755 wslpath
+    sudo mv wslpath /usr/bin
+fi
 
-
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
 
 echo "#=================================================#"
 echo "     This script first build the images            "
@@ -39,10 +45,10 @@ fi
 
 # run HiBench workload wordcount as an example
 # Format: sudo docker run (-v "LocalLargeDiskDir:/usr/loal"-it) hibench-hadoop-spark /bin/bash /root/HiBench/workloads/<workload-name>/prepare/prepare.sh
-if [ "$1" == "cdh" ]
-then
-   sudo docker run -ti hibench-docker-cdh /bin/bash -c '/root/runexample.sh'
-elif [ "$1" == "open-source" ]
-then
-   sudo docker run -ti hibench-docker-opensource /bin/bash -c '/root/runexample.sh'
-fi
+#if [ "$1" == "cdh" ]
+#then
+#   docker.exe run -ti hibench-docker-cdh /bin/bash -c '/root/runexample.sh'
+#elif [ "$1" == "open-source" ]
+#then
+#   docker.exe run -ti hibench-docker-opensource /bin/bash -c '/root/runexample.sh'
+#fi

@@ -14,3 +14,5 @@ report/
 .classpath
 .project
 .settings/
+/docker/base/Dockerfile
+/docker/cdh-docker/conf/cloudera.list

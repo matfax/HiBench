@@ -13,13 +13,12 @@ RUN \
   apt-get -y upgrade && \
   apt-get install -y build-essential && \
   apt-get install -y software-properties-common && \
-  apt-get install -y git wget curl man unzip vim-tiny bc && \
-
-# compilers and basic tools
-  apt-get install -y gfortran make gcc 
-
-# install ssh server
-RUN apt-get -y install openssh-server; mkdir -p /var/run/sshd; locale-gen en_US en_US.UTF-8
+  apt-get install -y git wget curl man unzip vim-tiny bc mc && \
+  apt-get install -y gfortran make gcc && \
+  apt-get -y install openssh-server; mkdir -p /var/run/sshd; locale-gen en_US en_US.UTF-8 && \
+  apt-get clean -y && \
+  apt-get autoremove -y && \
+  apt-get autoclean -y
 
 # passwordless ssh
 RUN rm -f /etc/ssh/ssh_host_dsa_key
@@ -38,13 +37,19 @@ RUN echo "    UserKnownHostsFile=/dev/null                 " >> /etc/ssh/ssh_con
 #==============================
 
 # install python
-RUN apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
+RUN apt-get update && apt-get install -y python${PYTHON_VERSION} python${PYTHON_VERSION}-dev && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y
 
 # pip
 RUN wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py; python get-pip.py; rm -f /get-pip.py
 
 # install numpy and matplotlib
-RUN apt-get install -y python-numpy python-matplotlib
+RUN apt-get update && apt-get install -y python-numpy python-matplotlib && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y
 
 
 #==============================
@@ -55,7 +60,10 @@ RUN apt-get install -y python-numpy python-matplotlib
 RUN \
   add-apt-repository -y ppa:openjdk-r/ppa && \
   apt-get update && \
-  apt-get install -y openjdk-${JDK_VERSION}-jdk
+  apt-get install -y openjdk-${JDK_VERSION}-jdk && \
+  apt-get clean -y && \
+  apt-get autoremove -y && \
+  apt-get autoclean -y
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-${JDK_VERSION}-openjdk-amd64
@@ -90,10 +98,10 @@ ENV PATH $PATH:/usr/local/scala/bin
 #ENV MAVEN_VERSION 3.1.0
 
 # download maven
-RUN wget https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN tar xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN rm -f apache-maven-${MAVEN_VERSION}-bin.tar.gz
-RUN mv apache-maven-* /usr/local/apache-maven
+RUN wget https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    tar xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    rm -f apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    mv apache-maven-* /usr/local/apache-maven
 
 # define environment variables for maven
 ENV M2_HOME /usr/local/apache-maven
@@ -112,13 +120,16 @@ ENV PATH $PATH:/usr/local/apache-maven/bin
 ENV HIBENCH_HOME /root/HiBench
 
 # download right version of HiBench
-RUN wget https://github.com/intel-hadoop/HiBench/archive/HiBench-${HIBENCH_VERSION}.zip
-RUN unzip HiBench-${HIBENCH_VERSION}.zip -d /root/
-RUN mv /root/HiBench* ${HIBENCH_HOME}
-RUN rm -f HiBench-${HIBENCH_VERSION}.zip
+RUN wget https://github.com/intel-hadoop/HiBench/archive/HiBench-${HIBENCH_VERSION}.zip && \
+    unzip HiBench-${HIBENCH_VERSION}.zip -d /root/ && \
+    mv /root/HiBench* ${HIBENCH_HOME} && \
+    rm -f HiBench-${HIBENCH_VERSION}.zip
 COPY conf/99-user_defined_properties.conf ${HIBENCH_HOME}/conf/
 # start building HiBench
-RUN apt-get update && apt-get install -y thrift-compiler
+RUN apt-get update && apt-get install -y thrift-compiler && \
+    apt-get clean -y && \
+    apt-get autoremove -y && \
+    apt-get autoclean -y
 #RUN cd ${HIBENCH_HOME}/src && \
 #mvn clean package -D spark1.5 -D MR2
 # /bin/build-all.sh can be used to built hibench for all known Spark and MR versions
