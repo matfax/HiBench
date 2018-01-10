@@ -45,10 +45,10 @@ fi
 
 # run HiBench workload wordcount as an example
 # Format: docker.exe run (-v "LocalLargeDiskDir:/usr/loal"-it) hibench-hadoop-spark /bin/bash /root/HiBench/workloads/<workload-name>/prepare/prepare.sh
-if [ "$1" == "cdh" ]
-then
-   docker.exe run -ti -v d:/data:/data --device-read-bps /dev/sda:200mb --device-read-iops /dev/sda:20000 --device-write-bps /dev/sda:200mb --device-write-iops /dev/sda:20000 hibench-docker-cdh /bin/bash -c "/root/runexample.sh"
-elif [ "$1" == "open-source" ]
-then
-   docker.exe run -ti -v d:/data:/data --device-read-bps /dev/sda:200mb --device-read-iops /dev/sda:20000 --device-write-bps /dev/sda:200mb --device-write-iops /dev/sda:20000 hibench-docker-opensource /bin/bash -c "/root/runexample.sh"
-fi
+#if [ "$1" == "cdh" ]
+#then
+#   docker.exe run -ti -v d:/data:/data --device-read-bps /dev/sda:200mb --device-read-iops /dev/sda:20000 --device-write-bps /dev/sda:200mb --device-write-iops /dev/sda:20000 hibench-docker-cdh /bin/bash -c "/root/runexample.sh"
+#elif [ "$1" == "open-source" ]
+#then
+#   docker.exe run -ti -v d:/data:/data --device-read-bps /dev/sda:200mb --device-read-iops /dev/sda:20000 --device-write-bps /dev/sda:200mb --device-write-iops /dev/sda:20000 hibench-docker-opensource /bin/bash -c "/root/runexample.sh"
+#fi

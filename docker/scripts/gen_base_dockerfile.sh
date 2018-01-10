@@ -16,7 +16,7 @@
 
 
 CUR_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)
-HOME_DIR=$(wslpath -w -r "${CUR_DIR}/..")
+HOME_DIR=$(wslpath -r "${CUR_DIR}/..")
 
 CONFIG_FILE=${HOME_DIR}/hibench-docker.conf
 DOCKERFILE_ADDR=${HOME_DIR}/base/Dockerfile

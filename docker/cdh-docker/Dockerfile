@@ -20,6 +20,15 @@ FROM hibench-base
 
 USER root
 
+#=========================#
+#    CDH distribution     #
+#=========================#
+# Make sure the CDH-distribution matches the versions of HADOOP and SPARK
+# Please check http://www.cloudera.com/content/cloudera/en/documentation/core/latest/topics/cdh_vd_cdh_package_previous.html
+
+ENV CDH_VERSION                      5
+ENV CDH_VERSION_DETAIL               5.3.3
+
 #==============================
 # CDH Installation
 #==============================

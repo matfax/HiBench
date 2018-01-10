@@ -16,3 +16,5 @@ report/
 .settings/
 conf/hadoop.conf
 conf/spark.conf
+/docker/base/Dockerfile
+/docker/cdh-docker/conf/cloudera.list
